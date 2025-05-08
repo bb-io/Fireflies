@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Product>Fireflies.ai</Product>
+        <Product>Fireflies.ai [Beta]</Product>
         <Description>Fireflies API is a GraphQL interface that provides efficient access to your transcripts data</Description>
         <Version>1.0.1</Version>
         <AssemblyName>Apps.Fireflies</AssemblyName>
