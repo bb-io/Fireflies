@@ -1,8 +1,8 @@
-using Apps.Appname.Connections;
+using Apps.Fireflies.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Tests.Appname.Base;
 
-namespace Tests.Appname;
+namespace Tests.Fireflies;
 
 [TestClass]
 public class ConnectionValidatorTests : TestBase

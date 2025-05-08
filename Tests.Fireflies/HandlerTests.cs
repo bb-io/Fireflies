@@ -1,18 +1,19 @@
-﻿using Apps.Appname.Handlers;
+﻿using Apps.Fireflies.DataHandlers;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 using Tests.Appname.Base;
 
-namespace Tests.Appname;
+namespace Tests.Fireflies;
 
 [TestClass]
 public class HandlerTests : TestBase
 {
     [TestMethod]
-    public async Task Dynamic_handler_works()
+    public async Task TranscriptsDataHandler_IsSuccess()
     {
-        var handler = new DynamicHandler(InvocationContext);
 
-        var result = await handler.GetDataAsync(new DataSourceContext { }, CancellationToken.None);
+        var handler = new TranscriptsDataHandler(InvocationContext);
+
+        var result = await handler.GetDataAsync(new DataSourceContext { SearchString = "" }, CancellationToken.None);
 
         Console.WriteLine($"Total: {result.Count()}");
         foreach (var item in result)
