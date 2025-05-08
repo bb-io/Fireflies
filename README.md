@@ -30,10 +30,9 @@ The Fireflies is a powerful interface designed to provide you with efficient and
 
 - **Get Transcription** Gets transcription and returns general info and JSON file with sentences
 
-
 ### Events
 
-- **On transcription completed** triggers when transcription is completed (comming soon)
+- **On transcription completed** triggers when transcription is completed
 
 ## Feedback
 

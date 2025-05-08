@@ -14,7 +14,7 @@ namespace Apps.Fireflies.Polling
         }
 
 
-        [PollingEvent]
+        [PollingEvent("On transcription completed", Description ="Triggers when transcription competed")]
         public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(PollingEventRequest<DateMemory> request)
         {
             var userRequest = new RestRequest
