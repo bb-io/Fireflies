@@ -38,7 +38,7 @@ namespace Apps.Fireflies.Models.Response
         [Display("Meeting link")]
         public string MeetingLink { get; set; }
 
-        [Display("JSON file")]
-        public FileReference JsonFile { get; set; }
+        [Display("Transcript file")]
+        public FileReference DialogueFile { get; set; }
     }
 }
