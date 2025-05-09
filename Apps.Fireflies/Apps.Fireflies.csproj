@@ -5,20 +5,21 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Product>Fireflies.ai [Beta]</Product>
-        <Description>Fireflies API is a GraphQL interface that provides efficient access to your transcripts data</Description>
-        <Version>1.0.1</Version>
+        <Description>Process audio, generate transcripts, and extract actionable data from your meetings.</Description>
+        <Version>1.0.2</Version>
         <AssemblyName>Apps.Fireflies</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="image\**" />
-      <EmbeddedResource Remove="image\**" />
-      <None Remove="image\**" />
+        <PackageReference Include="Blackbird.Applications.Sdk.Common" Version="2.11.0" />
+        <PackageReference Include="Blackbird.Applications.Sdk.Utils" Version="1.0.25" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blackbird.Applications.Sdk.Common" Version="2.11.0" />
-        <PackageReference Include="Blackbird.Applications.Sdk.Utils" Version="1.0.25" />
+      <None Remove="images\icon.png" />
+      <EmbeddedResource Include="images\icon.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>
