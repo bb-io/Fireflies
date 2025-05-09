@@ -116,13 +116,18 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
 
         var transcript = response.Data.Transcript;
 
-        var sentencesJson = JsonConvert.SerializeObject(transcript.Sentences, Formatting.Indented);
-        var jsonBytes = Encoding.UTF8.GetBytes(sentencesJson);
+        var dialogueBuilder = new StringBuilder();
+        foreach (var sentence in transcript.Sentences)
+        {
+            dialogueBuilder.AppendLine($"{sentence.SpeakerName}: {sentence.Text}");
+        }
+        var dialogueText = dialogueBuilder.ToString();
+        var textBytes = Encoding.UTF8.GetBytes(dialogueText);
 
-        var jsonFile = await _fileManagementClient.UploadAsync(
-                new MemoryStream(jsonBytes),
-                MediaTypeNames.Application.Json,
-                $"transcript_{input.TranscriptId}_sentences.json");
+        var dialogueFile = await _fileManagementClient.UploadAsync(
+            new MemoryStream(textBytes),
+            MediaTypeNames.Text.Plain,
+            $"transcript_{input.TranscriptId}_dialogue.txt");
 
         return new TranscriptResponse
         {
@@ -139,7 +144,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             CalId = transcript.CalId,
             CalendarType = transcript.CalendarType,
             MeetingLink = transcript.MeetingLink,
-            JsonFile = jsonFile
+            DialogueFile = dialogueFile
         };
     }
 }
