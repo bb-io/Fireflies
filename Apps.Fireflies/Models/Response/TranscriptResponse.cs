@@ -8,7 +8,7 @@ namespace Apps.Fireflies.Models.Response
         [Display("Transcript ID")]
         public string Id { get; set; }
 
-        [Display("String date")]
+        [Display("Date")]
         public string DateString { get; set; }
         public string Privacy { get; set; }
         public string Title { get; set; }
@@ -22,8 +22,8 @@ namespace Apps.Fireflies.Models.Response
         [Display("Calendar ID")]
         public string CalendarId { get; set; }
 
-        [Display("Date")]
-        public long Date { get; set; }
+        //[Display("Date")]
+        //public long Date { get; set; }
 
         [Display("Transcript URL")]
         public string TranscriptUrl { get; set; }
@@ -39,6 +39,9 @@ namespace Apps.Fireflies.Models.Response
         public string MeetingLink { get; set; }
 
         [Display("Transcript file")]
-        public FileReference DialogueFile { get; set; }
+        public FileReference SentencesFile { get; set; }
+
+        [Display("Meeting dialog")]
+        public string MeetingDialog { get; set; }
     }
 }

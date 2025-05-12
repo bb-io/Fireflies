@@ -21,7 +21,10 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
     {
         var client = new FirefliesClient(Creds);
 
-        var request = new RestRequest("/graphql", Method.Post);
+        var request = new RestRequest
+        {
+            Method = Method.Post
+        };
         request.AddHeader("Content-Type", "application/json");
 
         var graphqlQuery = new
@@ -112,7 +115,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
         var response = await client.ExecuteWithErrorHandling<TranscriptDtoResponse>(request);
 
         if (response.Data?.Transcript == null)
-            throw new PluginApplicationException("Failed to retrieve transcript");
+            throw new PluginApplicationException("Failed to retrieve transcript. Please check the input and try again");
 
         var transcript = response.Data.Transcript;
 
@@ -122,12 +125,13 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             dialogueBuilder.AppendLine($"{sentence.SpeakerName}: {sentence.Text}");
         }
         var dialogueText = dialogueBuilder.ToString();
-        var textBytes = Encoding.UTF8.GetBytes(dialogueText);
+        var sentencesJson = JsonConvert.SerializeObject(transcript.Sentences);
+        var jsonBytes = Encoding.UTF8.GetBytes(sentencesJson);
 
-        var dialogueFile = await _fileManagementClient.UploadAsync(
-            new MemoryStream(textBytes),
-            MediaTypeNames.Text.Plain,
-            $"transcript_{input.TranscriptId}_dialogue.txt");
+        var sentencesFile = await _fileManagementClient.UploadAsync(
+            new MemoryStream(jsonBytes),
+            "application/json",
+            $"transcript_{input.TranscriptId}_sentences.json");
 
         return new TranscriptResponse
         {
@@ -138,13 +142,13 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             HostEmail = transcript.HostEmail,
             OrganizerEmail = transcript.OrganizerEmail,
             CalendarId = transcript.CalendarId,
-            Date = transcript.Date,
             TranscriptUrl = transcript.TranscriptUrl,
             Duration = transcript.Duration,
             CalId = transcript.CalId,
             CalendarType = transcript.CalendarType,
             MeetingLink = transcript.MeetingLink,
-            DialogueFile = dialogueFile
+            SentencesFile = sentencesFile,
+            MeetingDialog = dialogueText
         };
     }
 }
