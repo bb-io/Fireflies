@@ -38,7 +38,7 @@ The Fireflies is a powerful interface designed to provide you with efficient and
 
 ![example](image/README/fireflies-example.png)
 
-The workflow depicted in the image above is triggered when a meeting transcription is completed. It automatically retrieves the meeting dialog, summarizes it using an LLM, translates the summary into Spanish, converts it into audio, and distributes the Spanish summary through Microsoft Teams and the audio file through Slack.
+The workflow depicted in the image above is triggered when a meeting transcription is completed. It then automatically retrieves the meeting dialog, summarizes it using an LLM, translates the summary into Spanish, converts it into audio, and distributes the Spanish summary through Microsoft Teams and the audio file via Slack.
 
 ## Feedback
 
