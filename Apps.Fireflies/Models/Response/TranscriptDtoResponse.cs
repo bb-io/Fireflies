@@ -157,19 +157,19 @@ namespace Apps.Fireflies.Models.Response
         public string Name { get; set; }
 
         [JsonProperty("num_transcripts")]
-        public int NumTranscripts { get; set; }
+        public int? NumTranscripts { get; set; }
 
         [JsonProperty("recent_meeting")]
-        public string RecentMeeting { get; set; }
+        public string? RecentMeeting { get; set; }
 
         [JsonProperty("minutes_consumed")]
-        public double MinutesConsumed { get; set; }
+        public double? MinutesConsumed { get; set; }
 
         [JsonProperty("is_admin")]
-        public bool IsAdmin { get; set; }
+        public bool? IsAdmin { get; set; }
 
         [JsonProperty("integrations")]
-        public object Integrations { get; set; }
+        public object? Integrations { get; set; }
     }
 
     public class MeetingAttendee
@@ -178,16 +178,16 @@ namespace Apps.Fireflies.Models.Response
         public string DisplayName { get; set; }
 
         [JsonProperty("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonProperty("phoneNumber")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty("location")]
-        public string Location { get; set; }
+        public string? Location { get; set; }
     }
 
     public class Summary
@@ -196,34 +196,34 @@ namespace Apps.Fireflies.Models.Response
         public IEnumerable<string> Keywords { get; set; }
 
         [JsonProperty("action_items")]
-        public string ActionItems { get; set; }
+        public string? ActionItems { get; set; }
 
         [JsonProperty("outline")]
-        public string Outline { get; set; }
+        public string? Outline { get; set; }
 
         [JsonProperty("shorthand_bullet")]
-        public string ShorthandBullet { get; set; }
+        public string? ShorthandBullet { get; set; }
 
         [JsonProperty("overview")]
-        public string Overview { get; set; }
+        public string? Overview { get; set; }
 
         [JsonProperty("bullet_gist")]
-        public string BulletGist { get; set; }
+        public string? BulletGist { get; set; }
 
         [JsonProperty("gist")]
-        public string Gist { get; set; }
+        public string? Gist { get; set; }
 
         [JsonProperty("short_summary")]
-        public string ShortSummary { get; set; }
+        public string? ShortSummary { get; set; }
 
         [JsonProperty("short_overview")]
-        public string ShortOverview { get; set; }
+        public string? ShortOverview { get; set; }
 
         [JsonProperty("meeting_type")]
-        public string MeetingType { get; set; }
+        public string? MeetingType { get; set; }
 
         [JsonProperty("topics_discussed")]
-        public string TopicsDiscussed { get; set; }
+        public string? TopicsDiscussed { get; set; }
 
         [JsonProperty("transcript_chapters")]
         public IEnumerable<string> TranscriptChapters { get; set; }
@@ -232,12 +232,12 @@ namespace Apps.Fireflies.Models.Response
     public class MeetingInfo
     {
         [JsonProperty("fred_joined")]
-        public bool FredJoined { get; set; }
+        public bool? FredJoined { get; set; }
 
         [JsonProperty("silent_meeting")]
-        public bool SilentMeeting { get; set; }
+        public bool? SilentMeeting { get; set; }
 
         [JsonProperty("summary_status")]
-        public string SummaryStatus { get; set; }
+        public string? SummaryStatus { get; set; }
     }
 }

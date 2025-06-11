@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Product>Fireflies.ai [Beta]</Product>
         <Description>Process audio, generate transcripts, and extract actionable data from your meetings.</Description>
-        <Version>1.0.5</Version>
+        <Version>1.0.6</Version>
         <AssemblyName>Apps.Fireflies</AssemblyName>
     </PropertyGroup>
 

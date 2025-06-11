@@ -15,7 +15,7 @@ public class TranscriptionTests : TestBase
         var action = new TranscriptionActions(InvocationContext, FileManager);
         var input = new TranscriptRequest
         {
-            TranscriptId = "01JTFY795QNKA2876GSD3GMF5F"
+            TranscriptId = "01JXCYPEKZRBBFXZ08J57GQTHG"
         };
         var result = await action.GetTranscription(input);
 
