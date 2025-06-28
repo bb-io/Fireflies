@@ -40,7 +40,7 @@ namespace Apps.Fireflies.Models.Response
         public string MeetingLink { get; set; }
 
         [Display("Transcript file")]
-        public FileReference SentencesFile { get; set; }
+        public FileReference? SentencesFile { get; set; }
 
         [Display("Meeting dialog")]
         public string MeetingDialog { get; set; }

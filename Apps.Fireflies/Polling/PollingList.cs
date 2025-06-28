@@ -1,5 +1,6 @@
 ﻿using Apps.Fireflies.Models.Response;
 using Apps.Fireflies.Polling.Models;
+using Apps.Fireflies.Utils;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Common.Polling;
 
@@ -125,7 +126,7 @@ namespace Apps.Fireflies.Polling
             var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptPollingResponseDto>(query, variables);
             var transcripts = transcriptResponse.Data.Transcripts.ToArray();
 
-            var matchingTranscripts = new List<TranscriptDto>();
+            var matchingTranscripts = new List<TranscriptResponse>();
             foreach (var transcript in transcripts)
             {
                 if (DateTime.Parse(transcript.DateString).ToUniversalTime() <= request.Memory.LastInteractionDate)
@@ -139,7 +140,24 @@ namespace Apps.Fireflies.Polling
                     && input.IgnoreWhenTitleContains.Any(ignore => transcript.Title.Contains(ignore, StringComparison.OrdinalIgnoreCase)))
                     continue;
 
-                matchingTranscripts.Add(transcript);
+                matchingTranscripts.Add(new TranscriptResponse
+                {
+                    Id = transcript.Id,
+                    DateString = transcript.DateString,
+                    Privacy = transcript.Privacy,
+                    Title = transcript.Title,
+                    HostEmail = transcript.HostEmail,
+                    OrganizerEmail = transcript.OrganizerEmail,
+                    CalendarId = transcript.CalendarId,
+                    TranscriptUrl = transcript.TranscriptUrl,
+                    VideoUrl = transcript.VideoUrl,
+                    Duration = (int)Math.Ceiling(transcript.Duration),
+                    CalId = transcript.CalId,
+                    CalendarType = transcript.CalendarType,
+                    MeetingLink = transcript.MeetingLink,
+                    SentencesFile = null,
+                    MeetingDialog = TranscriptUtils.BuildMeetingDialog(transcript.Sentences ?? [])
+                });
             }
 
             if (matchingTranscripts.Count == 0)

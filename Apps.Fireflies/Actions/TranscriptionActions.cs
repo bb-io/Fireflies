@@ -1,14 +1,12 @@
-using Apps.Fireflies.Api;
 using Apps.Fireflies.Models.Request;
 using Apps.Fireflies.Models.Response;
+using Apps.Fireflies.Utils;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
 using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using Newtonsoft.Json;
-using RestSharp;
-using System.Net.Mime;
 using System.Text;
 
 namespace Apps.Fireflies.Actions;
@@ -107,15 +105,8 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
 
         var transcript = response.Data.Transcript;
 
-        var dialogueBuilder = new StringBuilder();
-        foreach (var sentence in transcript.Sentences)
-        {
-            dialogueBuilder.AppendLine($"{sentence.SpeakerName}: {sentence.Text}");
-        }
-        var dialogueText = dialogueBuilder.ToString();
         var sentencesJson = JsonConvert.SerializeObject(transcript.Sentences);
         var jsonBytes = Encoding.UTF8.GetBytes(sentencesJson);
-
         var sentencesFile = await _fileManagementClient.UploadAsync(
             new MemoryStream(jsonBytes),
             "application/json",
@@ -137,7 +128,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             CalendarType = transcript.CalendarType,
             MeetingLink = transcript.MeetingLink,
             SentencesFile = sentencesFile,
-            MeetingDialog = dialogueText
+            MeetingDialog = TranscriptUtils.BuildMeetingDialog(transcript.Sentences ?? [])
         };
     }
 }
