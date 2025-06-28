@@ -2,7 +2,6 @@
 using Apps.Fireflies.Polling.Models;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Common.Polling;
-using RestSharp;
 
 namespace Apps.Fireflies.Polling
 {
@@ -30,7 +29,7 @@ namespace Apps.Fireflies.Polling
             }
 
             // Main logic
-            var transcriptQuery = @"query Transcripts($userId: String, $fromDate: DateTime) {
+            var query = @"query Transcripts($userId: String, $fromDate: DateTime) {
                 transcripts(user_id: $userId, fromDate: $fromDate) {
                         id
                         dateString
@@ -123,7 +122,7 @@ namespace Apps.Fireflies.Polling
                 fromDate = request.Memory.LastInteractionDate.ToString("o")
             };
 
-            var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptPollingResponseDto>(transcriptQuery, variables);
+            var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptPollingResponseDto>(query, variables);
             var transcripts = transcriptResponse.Data.Transcripts.ToArray();
 
             var matchingTranscripts = new List<TranscriptDto>();

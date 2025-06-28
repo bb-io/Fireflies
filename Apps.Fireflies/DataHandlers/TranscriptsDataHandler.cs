@@ -1,9 +1,6 @@
-﻿using Apps.Fireflies.Models.Request;
-using Apps.Fireflies.Models.Response;
-using Blackbird.Applications.Sdk.Common;
+﻿using Apps.Fireflies.Models.Response;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 using Blackbird.Applications.Sdk.Common.Invocation;
-using RestSharp;
 
 namespace Apps.Fireflies.DataHandlers
 {
@@ -17,47 +14,41 @@ namespace Apps.Fireflies.DataHandlers
 
         private async Task<string> GetUserIdAsync()
         {
-            var request = new RestRequest
-            {
-                Method = Method.Post
-            };
-            request.AddHeader("Content-Type", "application/json")
-                   .AddJsonBody(new
-                   {
-                       query = "{ user { name user_id } }"
-                   });
+            var query = @"
+                { 
+                    user {
+                        user_id
+                        name
+                    }
+                }
+            ";
 
-            var response = await Client.ExecuteWithErrorHandling<UserResponse>(request);
+            var response = await Client.ExecuteQueryWithErrorHandling<UserResponse>(query);
+
             return response.Data.User?.UserId ?? throw new Exception("Failed to retrieve user ID");
         }
 
         public async Task<IEnumerable<DataSourceItem>> GetDataAsync(DataSourceContext context, CancellationToken cancellationToken)
         {
-            var request = new RestRequest
-            {
-                Method = Method.Post
-            };
-            request.AddHeader("Content-Type", "application/json");
+            var query = @"
+                query Transcripts($userId: String) {
+                    transcripts(user_id: $userId) {
+                        title
+                        id
+                    }
+                }
+            ";
 
-            var graphqlQuery = new
-            {
-                query = @"
-                    query Transcripts($userId: String) {
-                        transcripts(user_id: $userId) {
-                            title
-                            id
-                        }
-                    }",
-                variables = new { _userId }
-            };
+            var response = await Client.ExecuteQueryWithErrorHandling<TranscriptsResponse>(query, new { _userId });
 
-            request.AddJsonBody(graphqlQuery);
-
-            var response = await Client.ExecuteWithErrorHandling<TranscriptsResponse>(request);
-
-            return response.Data.Transcripts
-                .Where(x => context.SearchString == null || x.Title.Contains(context.SearchString, StringComparison.InvariantCultureIgnoreCase))
+            var transcripts = response.Data.Transcripts
                 .Select(x => new DataSourceItem(x.Id, x.Title));
+
+            if (string.IsNullOrEmpty(context.SearchString))
+                return transcripts;
+
+            return transcripts
+                .Where(x => x.DisplayName.Contains(context.SearchString, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

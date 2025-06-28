@@ -22,12 +22,13 @@ namespace Apps.Fireflies.Models.Response
         [Display("Calendar ID")]
         public string CalendarId { get; set; }
 
-        //[Display("Date")]
-        //public long Date { get; set; }
-
         [Display("Transcript URL")]
         public string TranscriptUrl { get; set; }
-        public double Duration { get; set; }
+
+        [Display("Video URL")]
+        public string VideoUrl { get; set; }
+
+        public int Duration { get; set; }
 
         [Display("Call ID")]
         public string CalId { get; set; }

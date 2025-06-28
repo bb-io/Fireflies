@@ -19,101 +19,88 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
     [Action("Get transcription", Description = "Gets transcription and returns general info and JSON file with sentences")]
     public async Task<TranscriptResponse> GetTranscription([ActionParameter] TranscriptRequest input)
     {
-        var client = new FirefliesClient(Creds);
+        var query = @"
+            query Transcript($transcriptId: String!) {
+                transcript(id: $transcriptId) {
+                    id
+                    dateString
+                    privacy
+                    speakers { id name }
+                    sentences {
+                        index
+                        speaker_name
+                        speaker_id
+                        text
+                        raw_text
+                        start_time
+                        end_time
+                        ai_filters {
+                        task
+                        pricing
+                        metric
+                        question
+                        date_and_time
+                        text_cleanup
+                        sentiment
+                        }
+                    }
+                    title
+                    host_email
+                    organizer_email
+                    calendar_id
+                    user {
+                        user_id
+                        email
+                        name
+                        num_transcripts
+                        recent_meeting
+                        minutes_consumed
+                        is_admin
+                        integrations
+                    }
+                    fireflies_users
+                    participants
+                    date
+                    transcript_url
+                    video_url
+                    duration
+                    meeting_attendees {
+                        displayName
+                        email
+                        phoneNumber
+                        name
+                        location
+                    }
+                    summary {
+                        keywords
+                        action_items
+                        outline
+                        shorthand_bullet
+                        overview
+                        bullet_gist
+                        gist
+                        short_summary
+                        short_overview
+                        meeting_type
+                        topics_discussed
+                        transcript_chapters
+                    }
+                    cal_id
+                    calendar_type
+                    meeting_info {
+                        fred_joined
+                        silent_meeting
+                        summary_status
+                    }
+                    apps_preview {
+                        outputs { transcript_id user_id app_id created_at title prompt response }
+                    }
+                    meeting_link
+                }
+            }
+        ";
 
-        var request = new RestRequest
-        {
-            Method = Method.Post
-        };
-        request.AddHeader("Content-Type", "application/json");
-
-        var graphqlQuery = new
-        {
-            query = @"
-                    query Transcript($transcriptId: String!) {
-                      transcript(id: $transcriptId) {
-                        id
-                        dateString
-                        privacy
-                        speakers { id name }
-                        sentences {
-                          index
-                          speaker_name
-                          speaker_id
-                          text
-                          raw_text
-                          start_time
-                          end_time
-                          ai_filters {
-                            task
-                            pricing
-                            metric
-                            question
-                            date_and_time
-                            text_cleanup
-                            sentiment
-                          }
-                        }
-                        title
-                        host_email
-                        organizer_email
-                        calendar_id
-                        user {
-                          user_id
-                          email
-                          name
-                          num_transcripts
-                          recent_meeting
-                          minutes_consumed
-                          is_admin
-                          integrations
-                        }
-                        fireflies_users
-                        participants
-                        date
-                        transcript_url
-                        video_url
-                        duration
-                        meeting_attendees {
-                          displayName
-                          email
-                          phoneNumber
-                          name
-                          location
-                        }
-                        summary {
-                          keywords
-                          action_items
-                          outline
-                          shorthand_bullet
-                          overview
-                          bullet_gist
-                          gist
-                          short_summary
-                          short_overview
-                          meeting_type
-                          topics_discussed
-                          transcript_chapters
-                        }
-                        cal_id
-                        calendar_type
-                        meeting_info {
-                          fred_joined
-                          silent_meeting
-                          summary_status
-                        }
-                        apps_preview {
-                          outputs { transcript_id user_id app_id created_at title prompt response }
-                        }
-                        meeting_link
-                      }
-                    }",
-            variables = new { input.TranscriptId }
-        };
-
-        request.AddJsonBody(graphqlQuery);
-
-        var response = await client.ExecuteWithErrorHandling<TranscriptDtoResponse>(request);
+        var response = await Client.ExecuteQueryWithErrorHandling<TranscriptDtoResponse>(query, new { input.TranscriptId });
 
         if (response.Data?.Transcript == null)
             throw new PluginApplicationException("Failed to retrieve transcript. Please check the input and try again");
@@ -144,7 +131,8 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             OrganizerEmail = transcript.OrganizerEmail,
             CalendarId = transcript.CalendarId,
             TranscriptUrl = transcript.TranscriptUrl,
-            Duration = transcript.Duration,
+            VideoUrl = transcript.VideoUrl,
+            Duration = (int)Math.Ceiling(transcript.Duration),
             CalId = transcript.CalId,
             CalendarType = transcript.CalendarType,
             MeetingLink = transcript.MeetingLink,

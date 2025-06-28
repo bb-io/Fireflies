@@ -1,7 +1,7 @@
 ﻿using Apps.Fireflies.Api;
+using Apps.Fireflies.Models.Response;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Connections;
-using RestSharp;
 
 namespace Apps.Fireflies.Connections;
 
@@ -13,23 +13,21 @@ public class ConnectionValidator : IConnectionValidator
     {
         try
         {
+            var query = @"
+                { 
+                    user {
+                        user_id
+                        name
+                    }
+                }
+            ";
+
             var client = new FirefliesClient(authenticationCredentialsProviders);
-
-            var request = new RestRequest
-            {
-                Method = Method.Post
-            };
-            request.AddHeader("Content-Type", "application/json")
-                   .AddJsonBody(new
-                   {
-                        query = "{ user { name user_id } }"
-                   });
-
-            await client.ExecuteWithErrorHandling(request);
+            var response = await client.ExecuteQueryWithErrorHandling<UserResponse>(query);
 
             return new()
             {
-                IsValid = true
+                IsValid = !string.IsNullOrEmpty(response.Data.User?.UserId),
             };
         }
         catch (Exception ex)

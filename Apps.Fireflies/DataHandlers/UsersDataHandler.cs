@@ -8,7 +8,7 @@ namespace Apps.Fireflies.DataHandlers
     {
         public async Task<IEnumerable<DataSourceItem>> GetDataAsync(DataSourceContext context, CancellationToken cancellationToken)
         {
-            var response = await Client.ExecuteQueryWithErrorHandling<UsersDatahandlerResponse>(@"
+            var query = @"
                 query Users {
                     users {
                         user_id
@@ -16,11 +16,12 @@ namespace Apps.Fireflies.DataHandlers
                         email
                     }
                 }
-            ");
+            ";
+
+            var response = await Client.ExecuteQueryWithErrorHandling<UsersDatahandlerResponse>(query);
 
             var dataSourceItems = response.Data.Users
-                .Select(x => new DataSourceItem(x.UserId, $"{x.Name} ({x.Email})"))
-                .ToList();
+                .Select(x => new DataSourceItem(x.UserId, $"{ x.Name} ({x.Email})"));
 
             if (string.IsNullOrEmpty(context.SearchString))
                 return dataSourceItems;
