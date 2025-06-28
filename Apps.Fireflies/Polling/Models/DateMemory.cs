@@ -1,8 +1,7 @@
-﻿namespace Apps.Fireflies.Polling.Models
+﻿namespace Apps.Fireflies.Polling.Models;
+
+public class DateMemory
 {
-    public class DateMemory
-    {
-        public DateTime LastInteractionDate { get; set; }
-    }
+    public DateTime LastInteractionDate { get; set; }
 }
 

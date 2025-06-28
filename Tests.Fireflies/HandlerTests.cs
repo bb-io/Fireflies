@@ -1,6 +1,6 @@
 ﻿using Apps.Fireflies.DataHandlers;
 using Blackbird.Applications.Sdk.Common.Dynamic;
-using Tests.Appname.Base;
+using Tests.Fireflies.Base;
 
 namespace Tests.Fireflies;
 

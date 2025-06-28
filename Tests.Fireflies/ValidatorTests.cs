@@ -1,6 +1,6 @@
 using Apps.Fireflies.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
-using Tests.Appname.Base;
+using Tests.Fireflies.Base;
 
 namespace Tests.Fireflies;
 
