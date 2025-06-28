@@ -72,6 +72,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
                         participants
                         date
                         transcript_url
+                        video_url
                         duration
                         meeting_attendees {
                           displayName

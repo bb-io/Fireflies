@@ -10,17 +10,20 @@ public class HandlerTests : TestBase
     [TestMethod]
     public async Task TranscriptsDataHandler_IsSuccess()
     {
-
         var handler = new TranscriptsDataHandler(InvocationContext);
 
         var result = await handler.GetDataAsync(new DataSourceContext { SearchString = "" }, CancellationToken.None);
 
-        Console.WriteLine($"Total: {result.Count()}");
-        foreach (var item in result)
-        {
-            Console.WriteLine($"{item.Value}: {item.DisplayName}");
-        }
+        Assert.IsTrue(result.Any());
+    }
 
-        Assert.IsTrue(result.Count() > 0);
+    [TestMethod]
+    public async Task UsersDataHandler_IsSuccess()
+    {
+        var handler = new UsersDataHandler(InvocationContext);
+
+        var result = await handler.GetDataAsync(new DataSourceContext { SearchString = "" }, CancellationToken.None);
+
+        Assert.IsTrue(result.Any());
     }
 }

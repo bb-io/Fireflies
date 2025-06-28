@@ -26,6 +26,17 @@ public class FirefliesClient : BlackBirdRestClient
         throw new PluginApplicationException(error.ToString());
     }
 
+    public async Task<T> ExecuteQueryWithErrorHandling<T>(string query, object? variables = null)
+    {
+        var request = new RestRequest
+        {
+            Method = Method.Post
+        };
+        request.AddHeader("Content-Type", "application/json");
+        request.AddJsonBody(new { query, variables });
+
+        return await ExecuteWithErrorHandling<T>(request);
+    }
 
     public override async Task<T> ExecuteWithErrorHandling<T>(RestRequest request)
     {

@@ -63,6 +63,9 @@ namespace Apps.Fireflies.Models.Response
         [JsonProperty("transcript_url")]
         public string TranscriptUrl { get; set; }
 
+        [JsonProperty("video_url")]
+        public string VideoUrl { get; set; }
+
         [JsonProperty("duration")]
         public double Duration { get; set; }
 

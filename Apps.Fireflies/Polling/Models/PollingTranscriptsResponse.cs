@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Apps.Fireflies.Models.Response;
+using Newtonsoft.Json;
 
 namespace Apps.Fireflies.Polling.Models
 {

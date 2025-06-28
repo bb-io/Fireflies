@@ -15,87 +15,151 @@ namespace Apps.Fireflies.Polling
 
 
         [PollingEvent("On transcription completed", Description ="Triggers when transcription competed")]
-        public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(PollingEventRequest<DateMemory> request)
+        public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(
+            PollingEventRequest<DateMemory> request,
+            PollingTranscriptsRequest input)
         {
-            var userRequest = new RestRequest
-            {
-                Method = Method.Post
-            };
-            userRequest.AddHeader("Content-Type", "application/json")
-                .AddJsonBody(new
-                {
-                    query = "{ user { user_id } }"
-                });
-
-            var userResponse = await Client.ExecuteWithErrorHandling<UserResponse>(userRequest);
-            var userId = userResponse.Data.User.UserId;
-
-            var transcriptQuery = @"query Transcripts($userId: String) {
-                transcripts(user_id: $userId) {
-                    title
-                    id
-                    date
-                    dateString
-                    host_email
-                    organizer_email
-                    meeting_attendees {
-                        displayName
-                        email
-                        phoneNumber
-                        name
-                        location
-                    }
-                    meeting_link
-                }
-            }";
-
-            var transcriptRequest = new RestRequest
-            {
-                Method = Method.Post
-            };
-            transcriptRequest.AddJsonBody(new
-            {
-                query = transcriptQuery,
-                variables = new { userId }
-            });
-
-            var transcriptResponse = await Client.ExecuteWithErrorHandling<TranscriptPollingResponseDto>(transcriptRequest);
-            var transcripts = transcriptResponse.Data.Transcripts.ToArray();
-
+            // First run, initialize memory and return early
             if (request.Memory == null)
             {
-                var maxDate = transcripts.Any()
-                    ? transcripts.Max(t => DateTime.Parse(t.DateString).ToUniversalTime())
-                    : DateTime.UtcNow;
-
                 return new PollingEventResponse<DateMemory, PollingTranscriptsResponse>
                 {
                     FlyBird = false,
-                    Memory = new DateMemory { LastInteractionDate = maxDate }
+                    Memory = new DateMemory { LastInteractionDate = DateTime.UtcNow }
                 };
             }
 
-            var newTranscripts = transcripts
-                .Where(t => DateTime.Parse(t.DateString).ToUniversalTime() > request.Memory.LastInteractionDate)
-                .ToArray();
+            // Main logic
+            var transcriptQuery = @"query Transcripts($userId: String, $fromDate: DateTime) {
+                transcripts(user_id: $userId, fromDate: $fromDate) {
+                        id
+                        dateString
+                        title
+                        host_email
+                        organizer_email
+                        calendar_id
+                        fireflies_users
+                        participants
+                        date
+                        transcript_url
+                        video_url
+                        duration
+                        cal_id
+                        calendar_type
+                        meeting_link
+                        privacy
+                        speakers { id name }
+                        sentences {
+                          index
+                          speaker_name
+                          speaker_id
+                          text
+                          raw_text
+                          start_time
+                          end_time
+                          ai_filters {
+                            task
+                            pricing
+                            metric
+                            question
+                            date_and_time
+                            text_cleanup
+                            sentiment
+                          }
+                        }
+                        user {
+                          user_id
+                          email
+                          name
+                          num_transcripts
+                          recent_meeting
+                          minutes_consumed
+                          is_admin
+                          integrations
+                        }
+                        meeting_attendees {
+                          displayName
+                          email
+                          phoneNumber
+                          name
+                          location
+                        }
+                        summary {
+                          keywords
+                          action_items
+                          outline
+                          shorthand_bullet
+                          overview
+                          bullet_gist
+                          gist
+                          short_summary
+                          short_overview
+                          meeting_type
+                          topics_discussed
+                          transcript_chapters
+                        }
+                        meeting_info {
+                          fred_joined
+                          silent_meeting
+                          summary_status
+                        }
+                        apps_preview {
+                          outputs {
+                            transcript_id
+                            user_id
+                            app_id
+                            created_at
+                            title
+                            prompt
+                            response
+                          }
+                        }
+                }
+            }";
 
-            if (newTranscripts.Any())
+            var variables = new
             {
-                var newMaxDate = newTranscripts.Max(t => DateTime.Parse(t.DateString).ToUniversalTime());
-                request.Memory.LastInteractionDate = newMaxDate;
+                userId = input.UserId,
+                fromDate = request.Memory.LastInteractionDate.ToString("o")
+            };
 
+            var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptPollingResponseDto>(transcriptQuery, variables);
+            var transcripts = transcriptResponse.Data.Transcripts.ToArray();
+
+            var matchingTranscripts = new List<TranscriptDto>();
+            foreach (var transcript in transcripts)
+            {
+                if (DateTime.Parse(transcript.DateString).ToUniversalTime() <= request.Memory.LastInteractionDate)
+                    continue;
+
+                if (!string.IsNullOrEmpty(input.IgnoreWhenAllFromEmailDomain)
+                    && !transcript.MeetingAttendees.Any(a => !a.Email?.Contains(input.IgnoreWhenAllFromEmailDomain, StringComparison.OrdinalIgnoreCase) ?? false))
+                    continue;
+
+                if (input.IgnoreWhenTitleContains != null
+                    && input.IgnoreWhenTitleContains.Any(ignore => transcript.Title.Contains(ignore, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                matchingTranscripts.Add(transcript);
+            }
+
+            if (matchingTranscripts.Count == 0)
+            {
                 return new PollingEventResponse<DateMemory, PollingTranscriptsResponse>
                 {
-                    FlyBird = true,
-                    Memory = request.Memory,
-                    Result = new PollingTranscriptsResponse(newTranscripts)
+                    FlyBird = false,
+                    Memory = request.Memory
                 };
             }
+
+            var newMaxDate = matchingTranscripts.Max(t => DateTime.Parse(t.DateString).ToUniversalTime());
+            request.Memory.LastInteractionDate = newMaxDate;
 
             return new PollingEventResponse<DateMemory, PollingTranscriptsResponse>
             {
-                FlyBird = false,
-                Memory = request.Memory
+                FlyBird = true,
+                Memory = request.Memory,
+                Result = new PollingTranscriptsResponse(matchingTranscripts)
             };
         }
     }
