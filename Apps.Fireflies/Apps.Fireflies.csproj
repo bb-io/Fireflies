@@ -6,13 +6,13 @@
         <Nullable>enable</Nullable>
         <Product>Fireflies.ai [Beta]</Product>
         <Description>Process audio, generate transcripts, and extract actionable data from your meetings.</Description>
-        <Version>1.0.6</Version>
+        <Version>1.1.0</Version>
         <AssemblyName>Apps.Fireflies</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blackbird.Applications.Sdk.Common" Version="2.11.0" />
-        <PackageReference Include="Blackbird.Applications.Sdk.Utils" Version="1.0.25" />
+        <PackageReference Include="Blackbird.Applications.Sdk.Common" Version="2.12.0" />
+        <PackageReference Include="Blackbird.Applications.Sdk.Utils" Version="1.0.26" />
     </ItemGroup>
 
     <ItemGroup>

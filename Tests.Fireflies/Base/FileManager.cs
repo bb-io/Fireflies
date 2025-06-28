@@ -1,7 +1,7 @@
 ﻿using Blackbird.Applications.Sdk.Common.Files;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 
-namespace Tests.Appname.Base;
+namespace Tests.Fireflies.Base;
 
 public class FileManager : IFileManagementClient
 {
@@ -11,8 +11,9 @@ public class FileManager : IFileManagementClient
     public FileManager()
     {
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        var projectDirectory = Directory.GetParent(baseDirectory).Parent.Parent.Parent.FullName;
 
+        var projectDirectory = Directory.GetParent(baseDirectory)?.Parent?.Parent?.Parent?.FullName
+            ?? throw new Exception("Can't find a project directory.");
 
         var testFilesPath = Path.Combine(projectDirectory, "TestFiles");
         inputFolder = Path.Combine(testFilesPath, "Input");
@@ -36,7 +37,8 @@ public class FileManager : IFileManagementClient
     public Task<FileReference> UploadAsync(Stream stream, string contentType, string fileName)
     {
         var path = Path.Combine(outputFolder, fileName);
-        new FileInfo(path).Directory.Create();
+        new FileInfo(path).Directory?.Create();
+
         using (var fileStream = File.Create(path))
         {
             stream.CopyTo(fileStream);
@@ -45,4 +47,3 @@ public class FileManager : IFileManagementClient
         return Task.FromResult(new FileReference() { Name = fileName, ContentType = contentType });
     }
 }
-

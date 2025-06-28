@@ -1,63 +1,54 @@
-﻿using Apps.Fireflies.Models.Request;
-using Apps.Fireflies.Models.Response;
-using Blackbird.Applications.Sdk.Common;
+﻿using Apps.Fireflies.Models.Dtos;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 using Blackbird.Applications.Sdk.Common.Invocation;
-using RestSharp;
 
-namespace Apps.Fireflies.DataHandlers
+namespace Apps.Fireflies.DataHandlers;
+
+public class TranscriptsDataHandler : Invocable, IAsyncDataSourceItemHandler
 {
-    public class TranscriptsDataHandler : Invocable, IAsyncDataSourceItemHandler
+    readonly string _userId;
+    public TranscriptsDataHandler(InvocationContext invocationContext) : base(invocationContext)
     {
-        readonly string _userId;
-        public TranscriptsDataHandler(InvocationContext invocationContext) : base(invocationContext)
-        {
-            _userId = GetUserIdAsync().GetAwaiter().GetResult();
-        }
+        _userId = GetUserIdAsync().GetAwaiter().GetResult();
+    }
 
-        private async Task<string> GetUserIdAsync()
-        {
-            var request = new RestRequest
-            {
-                Method = Method.Post
-            };
-            request.AddHeader("Content-Type", "application/json")
-                   .AddJsonBody(new
-                   {
-                       query = "{ user { name user_id } }"
-                   });
+    private async Task<string> GetUserIdAsync()
+    {
+        var query = @"
+                { 
+                    user {
+                        user_id
+                        name
+                    }
+                }
+            ";
 
-            var response = await Client.ExecuteWithErrorHandling<UserResponse>(request);
-            return response.Data.User?.UserId ?? throw new Exception("Failed to retrieve user ID");
-        }
+        var response = await Client.ExecuteQueryWithErrorHandling<UserApiResponseDto>(query);
 
-        public async Task<IEnumerable<DataSourceItem>> GetDataAsync(DataSourceContext context, CancellationToken cancellationToken)
-        {
-            var request = new RestRequest
-            {
-                Method = Method.Post
-            };
-            request.AddHeader("Content-Type", "application/json");
+        return response.Data.User?.UserId ?? throw new Exception("Failed to retrieve user ID");
+    }
 
-            var graphqlQuery = new
-            {
-                query = @"
-                    query Transcripts($userId: String) {
-                        transcripts(user_id: $userId) {
-                            title
-                            id
-                        }
-                    }",
-                variables = new { _userId }
-            };
+    public async Task<IEnumerable<DataSourceItem>> GetDataAsync(DataSourceContext context, CancellationToken cancellationToken)
+    {
+        var query = @"
+            query Transcripts($userId: String) {
+                transcripts(user_id: $userId) {
+                    title
+                    id
+                }
+            }
+        ";
 
-            request.AddJsonBody(graphqlQuery);
+        var response = await Client
+            .ExecuteQueryWithErrorHandling<TranscriptDataHandlerApiResponseDto>(query, new { _userId });
 
-            var response = await Client.ExecuteWithErrorHandling<TranscriptsResponse>(request);
+        var transcripts = response.Data.Transcripts
+            .Select(x => new DataSourceItem(x.Id, x.Title));
 
-            return response.Data.Transcripts
-                .Where(x => context.SearchString == null || x.Title.Contains(context.SearchString, StringComparison.InvariantCultureIgnoreCase))
-                .Select(x => new DataSourceItem(x.Id, x.Title));
-        }
+        if (string.IsNullOrEmpty(context.SearchString))
+            return transcripts;
+
+        return transcripts
+            .Where(x => x.DisplayName.Contains(context.SearchString, StringComparison.InvariantCultureIgnoreCase));
     }
 }

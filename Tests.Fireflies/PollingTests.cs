@@ -1,133 +1,132 @@
-﻿using Apps.Fireflies.Polling;
-using Apps.Fireflies.Polling.Models;
+﻿using Apps.Fireflies.Events;
+using Apps.Fireflies.Events.Models;
 using Blackbird.Applications.Sdk.Common.Polling;
-using Tests.Appname.Base;
+using Tests.Fireflies.Base;
 
-namespace Tests.Fireflies
+namespace Tests.Fireflies;
+
+[TestClass]
+public class PollingTests : TestBase
 {
-    [TestClass]
-    public class PollingTests : TestBase
+    private readonly PollingList _pollingList;
+
+    public PollingTests() : base()
     {
-        private readonly PollingList _pollingList;
+        _pollingList = new PollingList(InvocationContext);
+    }
 
-        public PollingTests() : base()
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_DontFlyOnFirstRun()
+    {
+        var request = new PollingEventRequest<DateMemory> { Memory = null };
+        var input = new PollingTranscriptsRequest {};
+
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
+
+        Assert.IsFalse(response.FlyBird);
+        Assert.IsNotNull(response.Memory);
+    }
+
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_IsSuccess()
+    {
+        var request = new PollingEventRequest<DateMemory>
         {
-            _pollingList = new PollingList(InvocationContext);
-        }
+            Memory = new DateMemory
+            {
+                LastInteractionDate = DateTime.UtcNow.AddDays(-5)
+            }
+        };
 
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_DontFlyOnFirstRun()
+        var input = new PollingTranscriptsRequest {};
+
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
+
+        Assert.IsNotNull(response);
+    }
+
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_FiltersByEmail()
+    {
+        var request = new PollingEventRequest<DateMemory>
         {
-            var request = new PollingEventRequest<DateMemory> { Memory = null };
-            var input = new PollingTranscriptsRequest {};
+            Memory = new DateMemory
+            {
+                LastInteractionDate = DateTime.UtcNow.AddDays(-5)
+            }
+        };
 
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
+        var input = new PollingTranscriptsRequest {
+            IgnoreWhenAllFromEmailDomain = "blackbird.io",
+        };
 
-            Assert.IsFalse(response.FlyBird);
-            Assert.IsNotNull(response.Memory);
-        }
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
 
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_IsSuccess()
+        Assert.IsNotNull(response);
+    }
+
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_FiltersByTitle()
+    {
+        var request = new PollingEventRequest<DateMemory>
         {
-            var request = new PollingEventRequest<DateMemory>
+            Memory = new DateMemory
             {
-                Memory = new DateMemory
-                {
-                    LastInteractionDate = DateTime.UtcNow.AddDays(-5)
-                }
-            };
+                LastInteractionDate = DateTime.UtcNow.AddDays(-5)
+            }
+        };
 
-            var input = new PollingTranscriptsRequest {};
-
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
-
-            Assert.IsNotNull(response);
-        }
-
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_FiltersByEmail()
+        var input = new PollingTranscriptsRequest
         {
-            var request = new PollingEventRequest<DateMemory>
-            {
-                Memory = new DateMemory
-                {
-                    LastInteractionDate = DateTime.UtcNow.AddDays(-5)
-                }
-            };
+            IgnoreWhenTitleContains = ["Solution team standup", "Solutions sync-up"],
+        };
 
-            var input = new PollingTranscriptsRequest {
-                IgnoreWhenAllFromEmailDomain = "blackbird.io",
-            };
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
 
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
+        Assert.IsNotNull(response);
+    }
 
-            Assert.IsNotNull(response);
-        }
-
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_FiltersByTitle()
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_FiltersByUser()
+    {
+        var request = new PollingEventRequest<DateMemory>
         {
-            var request = new PollingEventRequest<DateMemory>
+            Memory = new DateMemory
             {
-                Memory = new DateMemory
-                {
-                    LastInteractionDate = DateTime.UtcNow.AddDays(-5)
-                }
-            };
+                LastInteractionDate = DateTime.UtcNow.AddDays(-5)
+            }
+        };
 
-            var input = new PollingTranscriptsRequest
-            {
-                IgnoreWhenTitleContains = ["Solution team standup", "Solutions sync-up"],
-            };
-
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
-
-            Assert.IsNotNull(response);
-        }
-
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_FiltersByUser()
+        var input = new PollingTranscriptsRequest
         {
-            var request = new PollingEventRequest<DateMemory>
-            {
-                Memory = new DateMemory
-                {
-                    LastInteractionDate = DateTime.UtcNow.AddDays(-5)
-                }
-            };
+            UserId = "01JXAJHAW82SRT6TY1ANQNBVQP", // Alex Terekhov
+        };
 
-            var input = new PollingTranscriptsRequest
-            {
-                UserId = "01JXAJHAW82SRT6TY1ANQNBVQP", // Alex Terekhov
-            };
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
 
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
+        Assert.IsNotNull(response);
+    }
 
-            Assert.IsNotNull(response);
-        }
-
-        [TestMethod]
-        public async Task PollingTranscriptsResponse_FiltersByAllInputsAtOnce()
+    [TestMethod]
+    public async Task PollingTranscriptsResponse_FiltersByAllInputsAtOnce()
+    {
+        var request = new PollingEventRequest<DateMemory>
         {
-            var request = new PollingEventRequest<DateMemory>
+            Memory = new DateMemory
             {
-                Memory = new DateMemory
-                {
-                    LastInteractionDate = DateTime.UtcNow.AddDays(-5)
-                }
-            };
+                LastInteractionDate = DateTime.UtcNow.AddDays(-5)
+            }
+        };
 
-            var input = new PollingTranscriptsRequest
-            {
-                UserId = "01JXAJHAW82SRT6TY1ANQNBVQP", // Alex Terekhov
-                IgnoreWhenTitleContains = ["Solution team standup", "Solutions sync-up"],
-                IgnoreWhenAllFromEmailDomain = "blackbird.io",
-            };
+        var input = new PollingTranscriptsRequest
+        {
+            UserId = "01JXAJHAW82SRT6TY1ANQNBVQP", // Alex Terekhov
+            IgnoreWhenTitleContains = ["Solution team standup", "Solutions sync-up"],
+            IgnoreWhenAllFromEmailDomain = "blackbird.io",
+        };
 
-            var response = await _pollingList.OnTranscriptionCompleted(request, input);
+        var response = await _pollingList.OnTranscriptionCompleted(request, input);
 
-            Assert.IsNotNull(response);
-        }
+        Assert.IsNotNull(response);
     }
 }

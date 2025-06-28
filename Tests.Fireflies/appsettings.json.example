@@ -1,6 +1,6 @@
 {
   "ConnectionDefinition": {
-    "token": ""
+    "api_token": "Get from https://app.fireflies.ai/settings#DeveloperSettings"
   },
   "TestFolder": "TestFiles"
 }

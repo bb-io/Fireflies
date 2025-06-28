@@ -21,9 +21,9 @@ public class FirefliesClient : BlackBirdRestClient
 
     protected override Exception ConfigureErrorException(RestResponse response)
     {
-        var error = JsonConvert.DeserializeObject(response.Content);
+        var error = JsonConvert.DeserializeObject(response.Content ?? "{}");
 
-        throw new PluginApplicationException(error.ToString());
+        throw new PluginApplicationException(error?.ToString() ?? "Unexpected error from Fireflies API returned.");
     }
 
     public async Task<T> ExecuteQueryWithErrorHandling<T>(string query, object? variables = null)
@@ -40,12 +40,13 @@ public class FirefliesClient : BlackBirdRestClient
 
     public override async Task<T> ExecuteWithErrorHandling<T>(RestRequest request)
     {
-        string content = (await ExecuteWithErrorHandling(request)).Content;
-        T val = JsonConvert.DeserializeObject<T>(content, JsonSettings);
+        var response = await ExecuteWithErrorHandling(request);
+        string content = response.Content ?? "";
+
+        T? val = JsonConvert.DeserializeObject<T>(content, JsonSettings);
+        
         if (val == null)
-        {
             throw new Exception($"Could not parse {content} to {typeof(T)}");
-        }
 
         return val;
     }
@@ -54,7 +55,7 @@ public class FirefliesClient : BlackBirdRestClient
     {
         int retryCount = 3;
         int attempt = 0;
-        Exception lastException = null;
+        Exception? lastException = null;
 
         while (attempt < retryCount)
         {
@@ -74,6 +75,6 @@ public class FirefliesClient : BlackBirdRestClient
 
             }
         }
-        throw lastException;
+        throw lastException ?? throw new Exception("Error while retrying a request.");
     }
 }
