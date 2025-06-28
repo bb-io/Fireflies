@@ -4,18 +4,18 @@ namespace Apps.Fireflies.Models.Response;
 
 public class UserResponse
 {
-    public UserData Data { get; set; }
+    public UserData Data { get; set; } = new();
 }
 
 public class UserData
 {
-    public UserInfo User { get; set; }
+    public UserInfo User { get; set; } = new();
 }
 
 public class UserInfo
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty("user_id")]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
 }

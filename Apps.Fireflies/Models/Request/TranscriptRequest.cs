@@ -8,5 +8,5 @@ public class TranscriptRequest
 {
     [Display("Transcript ID")]
     [DataSource(typeof(TranscriptsDataHandler))]
-    public string TranscriptId { get; set; }
+    public string TranscriptId { get; set; } = string.Empty;
 }

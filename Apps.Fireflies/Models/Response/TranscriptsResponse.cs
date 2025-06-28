@@ -2,14 +2,14 @@
 
 public class TranscriptsResponse
 {
-    public TranscriptData Data { get; set; }
+    public TranscriptData Data { get; set; } = new();
 }
 public class TranscriptData
 {
-    public List<Transcript> Transcripts { get; set; }
+    public List<Transcript> Transcripts { get; set; } = [];
 }
 public class Transcript
 {
-    public string Id { get; set; }
-    public string Title { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 }

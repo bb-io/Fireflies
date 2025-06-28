@@ -6,42 +6,42 @@ namespace Apps.Fireflies.Models.Response;
 public class TranscriptResponse
 {
     [Display("Transcript ID")]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [Display("Date")]
-    public string DateString { get; set; }
-    public string Privacy { get; set; }
-    public string Title { get; set; }
+    public string DateString { get; set; } = string.Empty;
+    public string Privacy { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
     [Display("Host mail")]
-    public string HostEmail { get; set; }
+    public string HostEmail { get; set; } = string.Empty;
 
     [Display("Organizer email")]
-    public string OrganizerEmail { get; set; }
+    public string OrganizerEmail { get; set; } = string.Empty;
 
     [Display("Calendar ID")]
-    public string CalendarId { get; set; }
+    public string CalendarId { get; set; } = string.Empty;
 
     [Display("Transcript URL")]
-    public string TranscriptUrl { get; set; }
+    public string TranscriptUrl { get; set; } = string.Empty;
 
     [Display("Video URL")]
-    public string VideoUrl { get; set; }
+    public string VideoUrl { get; set; } = string.Empty;
 
     public int Duration { get; set; }
 
     [Display("Call ID")]
-    public string CalId { get; set; }
+    public string CalId { get; set; } = string.Empty;
 
     [Display("Calendar type")]
-    public string CalendarType { get; set; }
+    public string CalendarType { get; set; } = string.Empty;
 
     [Display("Meeting link")]
-    public string MeetingLink { get; set; }
+    public string MeetingLink { get; set; } = string.Empty;
 
     [Display("Transcript file")]
     public FileReference? SentencesFile { get; set; }
 
     [Display("Meeting dialog")]
-    public string MeetingDialog { get; set; }
+    public string MeetingDialog { get; set; } = string.Empty;
 }

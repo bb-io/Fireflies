@@ -5,82 +5,82 @@ namespace Apps.Fireflies.Models.Response;
 public class TranscriptDtoResponse
 {
     [JsonProperty("data")]
-    public TranscriptDataDto Data { get; set; }
+    public TranscriptDataDto Data { get; set; } = new();
 }
 
 public class TranscriptDataDto
 {
     [JsonProperty("transcript")]
-    public TranscriptDto Transcript { get; set; }
+    public TranscriptDto Transcript { get; set; } = new();
 }
 
 public class TranscriptDto
 {
     [JsonProperty("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [JsonProperty("dateString")]
-    public string DateString { get; set; }
+    public string DateString { get; set; } = string.Empty;
 
     [JsonProperty("privacy")]
-    public string Privacy { get; set; }
+    public string Privacy { get; set; } = string.Empty;
 
     [JsonProperty("speakers")]
-    public List<Speaker> Speakers { get; set; }
+    public List<Speaker> Speakers { get; set; } = [];
 
     [JsonProperty("sentences")]
-    public List<Sentence> Sentences { get; set; }
+    public List<Sentence> Sentences { get; set; } = [];
 
     [JsonProperty("title")]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [JsonProperty("host_email")]
-    public string HostEmail { get; set; }
+    public string HostEmail { get; set; } = string.Empty;
 
     [JsonProperty("organizer_email")]
-    public string OrganizerEmail { get; set; }
+    public string OrganizerEmail { get; set; } = string.Empty;
 
     [JsonProperty("calendar_id")]
-    public string CalendarId { get; set; }
+    public string CalendarId { get; set; } = string.Empty;
 
     [JsonProperty("user")]
-    public User User { get; set; }
+    public User User { get; set; } = new();
 
     [JsonProperty("fireflies_users")]
-    public List<string> FirefliesUsers { get; set; }
+    public List<string> FirefliesUsers { get; set; } = [];
 
     [JsonProperty("participants")]
-    public List<string> Participants { get; set; }
+    public List<string> Participants { get; set; } = [];
 
     [JsonProperty("date")]
-    public long Date { get; set; }
+    public long Date { get; set; } = 0;
 
     [JsonProperty("transcript_url")]
-    public string TranscriptUrl { get; set; }
+    public string TranscriptUrl { get; set; } = string.Empty;
 
     [JsonProperty("video_url")]
-    public string VideoUrl { get; set; }
+    public string VideoUrl { get; set; } = string.Empty;
 
     [JsonProperty("duration")]
-    public double Duration { get; set; }
+    public double Duration { get; set; } = 0;
 
     [JsonProperty("meeting_attendees")]
-    public List<MeetingAttendee> MeetingAttendees { get; set; }
+    public List<MeetingAttendee> MeetingAttendees { get; set; } = [];
 
     [JsonProperty("summary")]
-    public Summary Summary { get; set; }
+    public Summary Summary { get; set; } = new();
 
     [JsonProperty("cal_id")]
-    public string CalId { get; set; }
+    public string CalId { get; set; } = string.Empty;
 
     [JsonProperty("calendar_type")]
-    public string CalendarType { get; set; }
+    public string CalendarType { get; set; } = string.Empty;
 
     [JsonProperty("meeting_info")]
-    public MeetingInfo MeetingInfo { get; set; }
+    public MeetingInfo MeetingInfo { get; set; } = new();
 
     [JsonProperty("meeting_link")]
-    public string MeetingLink { get; set; }
+    public string MeetingLink { get; set; } = string.Empty;
 }
 
 public class Speaker
@@ -89,7 +89,7 @@ public class Speaker
     public int Id { get; set; }
 
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
 
 public class Sentence
@@ -98,16 +98,16 @@ public class Sentence
     public int Index { get; set; }
 
     [JsonProperty("speaker_name")]
-    public string SpeakerName { get; set; }
+    public string SpeakerName { get; set; } = string.Empty;
 
     [JsonProperty("speaker_id")]
     public int SpeakerId { get; set; }
 
     [JsonProperty("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     [JsonProperty("raw_text")]
-    public string RawText { get; set; }
+    public string RawText { get; set; } = string.Empty;
 
     [JsonProperty("start_time")]
     public double StartTime { get; set; }
@@ -116,43 +116,43 @@ public class Sentence
     public double EndTime { get; set; }
 
     [JsonProperty("ai_filters")]
-    public AiFilters AiFilters { get; set; }
+    public AiFilters AiFilters { get; set; } = new();
 }
 
 public class AiFilters
 {
     [JsonProperty("task")]
-    public string Task { get; set; }
+    public string Task { get; set; } = string.Empty;
 
     [JsonProperty("pricing")]
-    public string Pricing { get; set; }
+    public string Pricing { get; set; } = string.Empty;
 
     [JsonProperty("metric")]
-    public string Metric { get; set; }
+    public string Metric { get; set; } = string.Empty;
 
     [JsonProperty("question")]
-    public string Question { get; set; }
+    public string Question { get; set; } = string.Empty;
 
     [JsonProperty("date_and_time")]
-    public string DateAndTime { get; set; }
+    public string DateAndTime { get; set; } = string.Empty;
 
     [JsonProperty("text_cleanup")]
-    public string TextCleanup { get; set; }
+    public string TextCleanup { get; set; } = string.Empty;
 
     [JsonProperty("sentiment")]
-    public string Sentiment { get; set; }
+    public string Sentiment { get; set; } = string.Empty;
 }
 
 public class User
 {
     [JsonProperty("user_id")]
-    public string UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
 
     [JsonProperty("email")]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty("num_transcripts")]
     public int? NumTranscripts { get; set; }
@@ -173,7 +173,7 @@ public class User
 public class MeetingAttendee
 {
     [JsonProperty("displayName")]
-    public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
     [JsonProperty("email")]
     public string? Email { get; set; }
@@ -191,7 +191,7 @@ public class MeetingAttendee
 public class Summary
 {
     [JsonProperty("keywords")]
-    public IEnumerable<string> Keywords { get; set; }
+    public IEnumerable<string> Keywords { get; set; } = [];
 
     [JsonProperty("action_items")]
     public string? ActionItems { get; set; }
@@ -224,7 +224,7 @@ public class Summary
     public string? TopicsDiscussed { get; set; }
 
     [JsonProperty("transcript_chapters")]
-    public IEnumerable<string> TranscriptChapters { get; set; }
+    public IEnumerable<string> TranscriptChapters { get; set; } = [];
 }
 
 public class MeetingInfo
