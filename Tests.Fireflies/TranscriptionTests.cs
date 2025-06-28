@@ -1,5 +1,5 @@
 ﻿using Apps.Fireflies.Actions;
-using Apps.Fireflies.Models.Request;
+using Apps.Fireflies.Models.Requests;
 using Tests.Fireflies.Base;
 
 namespace Tests.Fireflies;
@@ -10,7 +10,7 @@ public class TranscriptionTests : TestBase
     [TestMethod]
     public async Task GetTranscript_IsSuccess()
     {
-        var input = new TranscriptRequest
+        var input = new TranscriptionRequest
         {
             TranscriptId = "01JXCYPEKZRBBFXZ08J57GQTHG"
         };

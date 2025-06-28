@@ -1,5 +1,5 @@
-﻿using Apps.Fireflies.Polling;
-using Apps.Fireflies.Polling.Models;
+﻿using Apps.Fireflies.Events;
+using Apps.Fireflies.Events.Models;
 using Blackbird.Applications.Sdk.Common.Polling;
 using Tests.Fireflies.Base;
 

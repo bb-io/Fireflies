@@ -1,18 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Apps.Fireflies.Models.Response;
-
-public class TranscriptDtoResponse
-{
-    [JsonProperty("data")]
-    public TranscriptDataDto Data { get; set; } = new();
-}
-
-public class TranscriptDataDto
-{
-    [JsonProperty("transcript")]
-    public TranscriptDto Transcript { get; set; } = new();
-}
+namespace Apps.Fireflies.Models.Dtos;
 
 public class TranscriptDto
 {
@@ -237,4 +225,26 @@ public class MeetingInfo
 
     [JsonProperty("summary_status")]
     public string? SummaryStatus { get; set; }
+}
+
+public class TranscriptApiResponseDto
+{
+    [JsonProperty("data")]
+    public TranscriptApiResponseData Data { get; set; } = new();
+}
+
+public class TranscriptApiResponseData
+{
+    [JsonProperty("transcript")]
+    public TranscriptDto Transcript { get; set; } = new();
+}
+
+public class TranscriptsApiResponseDto
+{
+    public TranscriptsApiResponseData Data { get; set; } = new();
+}
+
+public class TranscriptsApiResponseData
+{
+    public List<TranscriptDto> Transcripts { get; set; } = [];
 }

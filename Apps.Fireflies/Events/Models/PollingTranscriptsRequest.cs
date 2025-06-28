@@ -2,7 +2,7 @@
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 
-namespace Apps.Fireflies.Polling.Models;
+namespace Apps.Fireflies.Events.Models;
 
 public class PollingTranscriptsRequest
 {

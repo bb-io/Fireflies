@@ -1,11 +1,11 @@
-using Apps.Fireflies.Models.Response;
+using Apps.Fireflies.Models.Dtos;
 using System.Text;
 
 namespace Apps.Fireflies.Utils;
 
 public static class TranscriptUtils
 {
-    public static string BuildMeetingDialog(IEnumerable<Sentence> sentences)
+    public static string BuildTranscriptText(IEnumerable<Sentence> sentences)
     {
         var dialogueBuilder = new StringBuilder();
         foreach (var sentence in sentences)

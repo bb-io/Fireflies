@@ -1,4 +1,4 @@
-﻿using Apps.Fireflies.Models.Response;
+﻿using Apps.Fireflies.Models.Dtos;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 using Blackbird.Applications.Sdk.Common.Invocation;
 
@@ -18,7 +18,7 @@ public class UsersDataHandler(InvocationContext invocationContext) : Invocable(i
             }
         ";
 
-        var response = await Client.ExecuteQueryWithErrorHandling<UsersDatahandlerResponse>(query);
+        var response = await Client.ExecuteQueryWithErrorHandling<UsersApiResponseDto>(query);
 
         var dataSourceItems = response.Data.Users
             .Select(x => new DataSourceItem(x.UserId, $"{ x.Name} ({x.Email})"));

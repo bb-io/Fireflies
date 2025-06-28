@@ -1,15 +1,16 @@
-﻿using Apps.Fireflies.Models.Response;
-using Apps.Fireflies.Polling.Models;
+﻿using Apps.Fireflies.Models.Responses;
+using Apps.Fireflies.Events.Models;
 using Apps.Fireflies.Utils;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.Sdk.Common.Polling;
+using Apps.Fireflies.Models.Dtos;
 
-namespace Apps.Fireflies.Polling;
+namespace Apps.Fireflies.Events;
 
 [PollingEventList]
 public class PollingList(InvocationContext invocationContext) : Invocable(invocationContext)
 {
-    [PollingEvent("On transcription completed", Description ="Triggers when transcription competed")]
+    [PollingEvent("On transcription completed", Description ="Starts a flight when transcription is competed")]
     public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(
         PollingEventRequest<DateMemory> request,
         PollingTranscriptsRequest input)
@@ -123,7 +124,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
             fromDate = request.Memory.LastInteractionDate.ToString("o")
         };
 
-        var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptPollingResponseDto>(query, variables);
+        var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptsApiResponseDto>(query, variables);
         var transcripts = transcriptResponse.Data.Transcripts.ToArray();
 
         var matchingTranscripts = new List<TranscriptResponse>();
@@ -156,7 +157,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
                 CalendarType = transcript.CalendarType,
                 MeetingLink = transcript.MeetingLink,
                 SentencesFile = null,
-                MeetingDialog = TranscriptUtils.BuildMeetingDialog(transcript.Sentences ?? [])
+                MeetingDialog = TranscriptUtils.BuildTranscriptText(transcript.Sentences ?? [])
             });
         }
 

@@ -1,4 +1,4 @@
-﻿using Apps.Fireflies.Models.Response;
+﻿using Apps.Fireflies.Models.Dtos;
 using Blackbird.Applications.Sdk.Common.Dynamic;
 using Blackbird.Applications.Sdk.Common.Invocation;
 
@@ -23,7 +23,7 @@ public class TranscriptsDataHandler : Invocable, IAsyncDataSourceItemHandler
                 }
             ";
 
-        var response = await Client.ExecuteQueryWithErrorHandling<UserResponse>(query);
+        var response = await Client.ExecuteQueryWithErrorHandling<UserApiResponseDto>(query);
 
         return response.Data.User?.UserId ?? throw new Exception("Failed to retrieve user ID");
     }
@@ -39,7 +39,8 @@ public class TranscriptsDataHandler : Invocable, IAsyncDataSourceItemHandler
             }
         ";
 
-        var response = await Client.ExecuteQueryWithErrorHandling<TranscriptsResponse>(query, new { _userId });
+        var response = await Client
+            .ExecuteQueryWithErrorHandling<TranscriptDataHandlerApiResponseDto>(query, new { _userId });
 
         var transcripts = response.Data.Transcripts
             .Select(x => new DataSourceItem(x.Id, x.Title));

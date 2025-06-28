@@ -1,5 +1,6 @@
-using Apps.Fireflies.Models.Request;
-using Apps.Fireflies.Models.Response;
+using Apps.Fireflies.Models.Dtos;
+using Apps.Fireflies.Models.Requests;
+using Apps.Fireflies.Models.Responses;
 using Apps.Fireflies.Utils;
 using Blackbird.Applications.Sdk.Common;
 using Blackbird.Applications.Sdk.Common.Actions;
@@ -15,7 +16,7 @@ namespace Apps.Fireflies.Actions;
 public class TranscriptionActions(InvocationContext invocationContext, IFileManagementClient _fileManagementClient) : Invocable(invocationContext)
 {
     [Action("Get transcription", Description = "Returns call general information, full transcription, and detailed sentence data.")]
-    public async Task<TranscriptResponse> GetTranscription([ActionParameter] TranscriptRequest input)
+    public async Task<TranscriptResponse> GetTranscription([ActionParameter] TranscriptionRequest input)
     {
         var query = @"
             query Transcript($transcriptId: String!) {
@@ -98,7 +99,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             }
         ";
 
-        var response = await Client.ExecuteQueryWithErrorHandling<TranscriptDtoResponse>(query, new { input.TranscriptId });
+        var response = await Client.ExecuteQueryWithErrorHandling<TranscriptApiResponseDto>(query, new { input.TranscriptId });
 
         if (response.Data?.Transcript == null)
             throw new PluginApplicationException("Failed to retrieve transcript. Please check the input and try again");
@@ -128,7 +129,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             CalendarType = transcript.CalendarType,
             MeetingLink = transcript.MeetingLink,
             SentencesFile = sentencesFile,
-            MeetingDialog = TranscriptUtils.BuildMeetingDialog(transcript.Sentences ?? [])
+            MeetingDialog = TranscriptUtils.BuildTranscriptText(transcript.Sentences ?? [])
         };
     }
 }

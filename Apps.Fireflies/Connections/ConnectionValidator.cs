@@ -1,5 +1,5 @@
 ﻿using Apps.Fireflies.Api;
-using Apps.Fireflies.Models.Response;
+using Apps.Fireflies.Models.Dtos;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Connections;
 
@@ -23,7 +23,7 @@ public class ConnectionValidator : IConnectionValidator
             ";
 
             var client = new FirefliesClient(authenticationCredentialsProviders);
-            var response = await client.ExecuteQueryWithErrorHandling<UserResponse>(query);
+            var response = await client.ExecuteQueryWithErrorHandling<UserApiResponseDto>(query);
 
             return new()
             {
