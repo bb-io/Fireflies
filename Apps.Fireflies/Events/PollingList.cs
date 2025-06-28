@@ -13,7 +13,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
     [PollingEvent("On transcription completed", Description ="Starts a flight when transcription is competed")]
     public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(
         PollingEventRequest<DateMemory> request,
-        PollingTranscriptsRequest input)
+        [PollingEventParameter] PollingTranscriptsRequest input)
     {
         // First run, initialize memory and return early
         if (request.Memory == null)
