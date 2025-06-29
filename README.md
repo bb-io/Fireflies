@@ -28,11 +28,11 @@ Fireflies.ai makes it seamless to capture voice conversations. This app allows y
 
 ### Transcription
 
-- **Get Transcription** Returns call general information, full transcription, and detailed sentence data.
+- **Get Transcription** Returns call general information, full transcription, and a detailed sentence data as json file.
 
 ### Events
 
-- **On transcription completed** Starts a flight when transcription is competed. It has optional inputs to filter out desired transcriptions.
+- **On transcription completed** Starts a flight when transcription is competed. It has optional inputs to filter out desired transcriptions. Returns general information and full transcription of each new matching transcription.
 
 ## Examples
 
