@@ -16,7 +16,7 @@ namespace Apps.Fireflies.Actions;
 public class TranscriptionActions(InvocationContext invocationContext, IFileManagementClient _fileManagementClient) : Invocable(invocationContext)
 {
     [Action("Get transcription", Description = "Returns call general information, full transcription, and detailed sentence data.")]
-    public async Task<TranscriptResponse> GetTranscription([ActionParameter] TranscriptionRequest input)
+    public async Task<TranscriptWithSentencesFileResponse> GetTranscription([ActionParameter] TranscriptionRequest input)
     {
         var query = @"
             query Transcript($transcriptId: String!) {
