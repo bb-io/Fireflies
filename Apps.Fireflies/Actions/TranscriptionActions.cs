@@ -123,7 +123,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
             "application/json",
             $"transcript_{input.TranscriptId}_sentences.json");
 
-        return new TranscriptResponse
+        return new TranscriptWithSentencesFileResponse
         {
             Id = transcript.Id,
             CallDate = transcript.Date.ToUniversalTime(),

@@ -155,7 +155,6 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
                 CalId = transcript.CalId,
                 CalendarType = transcript.CalendarType,
                 MeetingLink = transcript.MeetingLink,
-                SentencesFile = null,
                 MeetingDialog = TranscriptUtils.BuildTranscriptText(transcript.Sentences ?? [])
             });
         }

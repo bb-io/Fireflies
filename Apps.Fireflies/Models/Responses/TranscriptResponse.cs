@@ -23,9 +23,6 @@ public class TranscriptResponse
     [Display("Video URL")]
     public string VideoUrl { get; set; } = string.Empty;
 
-    [Display("Transcription sentences file")]
-    public FileReference? SentencesFile { get; set; }
-
     [Display("Transcription text")]
     public string MeetingDialog { get; set; } = string.Empty;
 
