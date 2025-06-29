@@ -8,7 +8,7 @@ public class TranscriptDto
     public string Id { get; set; } = string.Empty;
 
     [JsonProperty("dateString")]
-    public string DateString { get; set; } = string.Empty;
+    public DateTime Date { get; set; }
 
     [JsonProperty("privacy")]
     public string Privacy { get; set; } = string.Empty;
@@ -39,9 +39,6 @@ public class TranscriptDto
 
     [JsonProperty("participants")]
     public List<string> Participants { get; set; } = [];
-
-    [JsonProperty("date")]
-    public long Date { get; set; } = 0;
 
     [JsonProperty("transcript_url")]
     public string TranscriptUrl { get; set; } = string.Empty;

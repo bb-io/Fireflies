@@ -23,8 +23,23 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
                 transcript(id: $transcriptId) {
                     id
                     dateString
+                    title
+                    host_email
+                    organizer_email
+                    calendar_id
+                    fireflies_users
+                    participants
+                    transcript_url
+                    video_url
+                    duration
+                    cal_id
+                    calendar_type
+                    meeting_link
                     privacy
-                    speakers { id name }
+                    speakers {
+                        id
+                        name
+                    }
                     sentences {
                         index
                         speaker_name
@@ -34,19 +49,15 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
                         start_time
                         end_time
                         ai_filters {
-                        task
-                        pricing
-                        metric
-                        question
-                        date_and_time
-                        text_cleanup
-                        sentiment
+                            task
+                            pricing
+                            metric
+                            question
+                            date_and_time
+                            text_cleanup
+                            sentiment
                         }
                     }
-                    title
-                    host_email
-                    organizer_email
-                    calendar_id
                     user {
                         user_id
                         email
@@ -57,12 +68,6 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
                         is_admin
                         integrations
                     }
-                    fireflies_users
-                    participants
-                    date
-                    transcript_url
-                    video_url
-                    duration
                     meeting_attendees {
                         displayName
                         email
@@ -84,17 +89,22 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
                         topics_discussed
                         transcript_chapters
                     }
-                    cal_id
-                    calendar_type
                     meeting_info {
                         fred_joined
                         silent_meeting
                         summary_status
                     }
                     apps_preview {
-                        outputs { transcript_id user_id app_id created_at title prompt response }
+                        outputs {
+                            transcript_id
+                            user_id
+                            app_id
+                            created_at
+                            title
+                            prompt
+                            response
+                        }
                     }
-                    meeting_link
                 }
             }
         ";
@@ -116,7 +126,7 @@ public class TranscriptionActions(InvocationContext invocationContext, IFileMana
         return new TranscriptResponse
         {
             Id = transcript.Id,
-            DateString = transcript.DateString,
+            CallDate = transcript.Date.ToUniversalTime(),
             Privacy = transcript.Privacy,
             Title = transcript.Title,
             HostEmail = transcript.HostEmail,

@@ -37,7 +37,6 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
                     calendar_id
                     fireflies_users
                     participants
-                    date
                     transcript_url
                     video_url
                     duration
@@ -130,7 +129,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
         var matchingTranscripts = new List<TranscriptResponse>();
         foreach (var transcript in transcripts)
         {
-            if (DateTime.Parse(transcript.DateString).ToUniversalTime() <= request.Memory.LastInteractionDate)
+            if (transcript.Date.ToUniversalTime() <= request.Memory.LastInteractionDate)
                 continue;
 
             if (!string.IsNullOrEmpty(input.IgnoreWhenAllFromEmailDomain)
@@ -144,7 +143,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
             matchingTranscripts.Add(new TranscriptResponse
             {
                 Id = transcript.Id,
-                DateString = transcript.DateString,
+                CallDate = transcript.Date.ToUniversalTime(),
                 Privacy = transcript.Privacy,
                 Title = transcript.Title,
                 HostEmail = transcript.HostEmail,
@@ -170,7 +169,7 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
             };
         }
 
-        var newMaxDate = matchingTranscripts.Max(t => DateTime.Parse(t.DateString).ToUniversalTime());
+        var newMaxDate = matchingTranscripts.Max(t => t.CallDate);
         request.Memory.LastInteractionDate = newMaxDate;
 
         return new PollingEventResponse<DateMemory, PollingTranscriptsResponse>
