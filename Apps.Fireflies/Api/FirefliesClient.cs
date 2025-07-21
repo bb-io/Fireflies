@@ -1,4 +1,5 @@
 using Apps.Fireflies.Constants;
+using Apps.Fireflies.Models.Dtos;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Utils.Extensions.Sdk;
@@ -21,11 +22,18 @@ public class FirefliesClient : BlackBirdRestClient
 
     protected override Exception ConfigureErrorException(RestResponse response)
     {
-        var error = JsonConvert.DeserializeObject(response.Content ?? "{}");
-
-        throw new PluginApplicationException(error?.ToString() ?? "Unexpected error from Fireflies API returned.");
+        try
+        {
+            var errors = JsonConvert.DeserializeObject<ErrorsDto>(response.Content!)!;
+            return new PluginApplicationException(errors.ToString());
+        }
+        catch(Exception)
+        {
+            var error = JsonConvert.DeserializeObject(response.Content ?? "{}");
+            throw new PluginApplicationException(error?.ToString() ?? "Unexpected error from Fireflies API returned.");
+        }
     }
-
+    
     public async Task<T> ExecuteQueryWithErrorHandling<T>(string query, object? variables = null)
     {
         var request = new RestRequest

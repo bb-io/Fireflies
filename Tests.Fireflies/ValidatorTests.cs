@@ -1,5 +1,6 @@
 using Apps.Fireflies.Connections;
 using Blackbird.Applications.Sdk.Common.Authentication;
+using Newtonsoft.Json;
 using Tests.Fireflies.Base;
 
 namespace Tests.Fireflies;
@@ -13,6 +14,7 @@ public class ConnectionValidatorTests : TestBase
         var validator = new ConnectionValidator();
         var result = await validator.ValidateConnection(Creds, CancellationToken.None);
 
+        Console.WriteLine(JsonConvert.SerializeObject(result));
         Assert.IsTrue(result.IsValid);
     }
 
@@ -26,6 +28,7 @@ public class ConnectionValidatorTests : TestBase
         var validator = new ConnectionValidator();
         var result = await validator.ValidateConnection(newCredentials, CancellationToken.None);
 
+        Console.WriteLine(JsonConvert.SerializeObject(result));
         Assert.IsFalse(result.IsValid);
     }
 }
