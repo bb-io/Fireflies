@@ -4,9 +4,9 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Product>Fireflies.ai [Beta]</Product>
+        <Product>Fireflies.ai</Product>
         <Description>Process audio, generate transcripts, and extract actionable data from your meetings.</Description>
-        <Version>1.1.2</Version>
+        <Version>1.1.3</Version>
         <AssemblyName>Apps.Fireflies</AssemblyName>
     </PropertyGroup>
 

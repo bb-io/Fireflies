@@ -1,5 +1,4 @@
 ﻿using Blackbird.Applications.Sdk.Common;
-using Blackbird.Applications.Sdk.Common.Files;
 
 namespace Apps.Fireflies.Models.Responses;
 
