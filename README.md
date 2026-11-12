@@ -29,6 +29,7 @@ Fireflies.ai makes it seamless to capture voice conversations. This app allows y
 ### Transcription
 
 - **Get transcription** Get call details, transcription text, and a file with detailed sentence data.
+- **Get call participants** Get Fireflies attendee names and emails, participant email addresses and recorded names.
 
 ## Events
 
