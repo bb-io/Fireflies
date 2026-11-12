@@ -57,7 +57,7 @@ public class PollingTests : TestBase
         };
 
         var input = new PollingTranscriptsRequest {
-            IgnoreWhenAllFromEmailDomain = "blackbird.io",
+            IgnoreWhenAllFromEmailDomains = ["blackbird.io"],
         };
 
         var response = await _pollingList.OnTranscriptionCompleted(request, input);
@@ -122,7 +122,7 @@ public class PollingTests : TestBase
         {
             UserId = "01JXAJHAW82SRT6TY1ANQNBVQP", // Alex Terekhov
             IgnoreWhenTitleContains = ["Solution team standup", "Solutions sync-up"],
-            IgnoreWhenAllFromEmailDomain = "blackbird.io",
+            IgnoreWhenAllFromEmailDomains = ["blackbird.io"],
         };
 
         var response = await _pollingList.OnTranscriptionCompleted(request, input);

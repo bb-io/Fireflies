@@ -12,10 +12,10 @@ using System.Text;
 
 namespace Apps.Fireflies.Actions;
 
-[ActionList("Transcriptions")]
+[ActionList]
 public class TranscriptionActions(InvocationContext invocationContext, IFileManagementClient _fileManagementClient) : Invocable(invocationContext)
 {
-    [Action("Get transcription", Description = "Returns call general information, full transcription, and detailed sentence data.")]
+    [Action("Get transcription", Description = "Get call details, transcription text, and a file with detailed sentence data.")]
     public async Task<TranscriptWithSentencesFileResponse> GetTranscription([ActionParameter] TranscriptionRequest input)
     {
         var query = @"
