@@ -10,7 +10,7 @@ namespace Apps.Fireflies.Events;
 [PollingEventList]
 public class PollingList(InvocationContext invocationContext) : Invocable(invocationContext)
 {
-    [PollingEvent("On transcription completed", Description ="Starts a flight when transcription is competed")]
+    [PollingEvent("On transcription completed", Description = "On transcription completion, output call details and transcription text.")]
     public async Task<PollingEventResponse<DateMemory, PollingTranscriptsResponse>> OnTranscriptionCompleted(
         PollingEventRequest<DateMemory> request,
         [PollingEventParameter] PollingTranscriptsRequest input)
