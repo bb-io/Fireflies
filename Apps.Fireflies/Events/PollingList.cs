@@ -126,14 +126,19 @@ public class PollingList(InvocationContext invocationContext) : Invocable(invoca
         var transcriptResponse = await Client.ExecuteQueryWithErrorHandling<TranscriptsApiResponseDto>(query, variables);
         var transcripts = transcriptResponse.Data.Transcripts.ToArray();
 
+        var ignoredEmailDomains = (input.IgnoreWhenAllFromEmailDomains ?? [])
+            .Where(domain => !string.IsNullOrEmpty(domain))
+            .ToArray();
+
         var matchingTranscripts = new List<TranscriptResponse>();
         foreach (var transcript in transcripts)
         {
             if (transcript.Date.ToUniversalTime() <= request.Memory.LastInteractionDate)
                 continue;
 
-            if (!string.IsNullOrEmpty(input.IgnoreWhenAllFromEmailDomain)
-                && !transcript.MeetingAttendees.Any(a => !a.Email?.Contains(input.IgnoreWhenAllFromEmailDomain, StringComparison.OrdinalIgnoreCase) ?? false))
+            if (ignoredEmailDomains.Length > 0
+                && !transcript.MeetingAttendees.Any(a => a.Email != null
+                    && !ignoredEmailDomains.Any(domain => a.Email.Contains(domain, StringComparison.OrdinalIgnoreCase))))
                 continue;
 
             if (input.IgnoreWhenTitleContains != null
