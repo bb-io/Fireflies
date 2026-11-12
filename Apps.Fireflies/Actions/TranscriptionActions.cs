@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Apps.Fireflies.Actions;
 
-[ActionList("Transcriptions")]
+[ActionList]
 public class TranscriptionActions(InvocationContext invocationContext, IFileManagementClient _fileManagementClient) : Invocable(invocationContext)
 {
     [Action("Get transcription", Description = "Returns call general information, full transcription, and detailed sentence data.")]
